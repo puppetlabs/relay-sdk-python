@@ -24,6 +24,6 @@ set -x
 $PYTHON -m tox --sdistonly
 $PYTHON -m pip wheel -w dist --no-deps "dist/$( $PYTHON setup.py --fullname ).tar.gz"
 
-for PACKAGE in $( nebula::sdk::support_python::package_artifacts "${ARTIFACTS_DIR}" ); do
-  nebula::sdk::sha256sum <"${PACKAGE}" >"${PACKAGE}.sha256"
+for PACKAGE in $( relay::sdk::python::package_artifacts "${ARTIFACTS_DIR}" ); do
+  relay::sdk::python::sha256sum <"${PACKAGE}" >"${PACKAGE}.sha256"
 done

@@ -3,7 +3,6 @@ import setuptools
 setuptools.setup(
     name='nebula-sdk',
     use_scm_version={
-        'root': '../..',
         'relative_to': __file__,
     },
     author='Puppet, Inc.',

@@ -1,5 +1,8 @@
+include LICENSE.txt
 include mypy.ini
 include tox.ini
-include LICENSE.txt
-recursive-include tests *.py
 recursive-include docs *.py *.rst
+recursive-include tests *.py
+
+exclude .editorconfig
+exclude CODEOWNERS
