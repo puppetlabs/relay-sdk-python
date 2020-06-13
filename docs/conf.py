@@ -1,5 +1,12 @@
 import sys
-sys.path.append("./src")
+import os
+
+# RTD changes directory into docs/ to run the build,
+# so the module code cannot be found for autodoc
+if os.environ.get('READTHEDOCS') == 'True':
+  sys.path.append("../src")
+else:
+  sys.path.append("./src")
 
 project = "Relay.sh SDK"
 author = "Puppet Inc"
