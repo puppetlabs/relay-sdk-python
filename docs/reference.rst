@@ -2,10 +2,6 @@ Relay SDK Reference Docs
 ========================
 
 
-.. contents::
-    :local:
-    :backlinks: none
-
 These are auto-generated docs for the current version of the Python SDK
 
 ----
