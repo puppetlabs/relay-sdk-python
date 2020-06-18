@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0]
+
 ### Added
 
 * Initial release.
 
-[Unreleased]: https://github.com/puppetlabs/relay-sdk-go/compare/775de66c45128d999013fa1143398e98dbd071c7...HEAD
+[Unreleased]: https://github.com/puppetlabs/relay-sdk-go/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/puppetlabs/relay-sdk-go/compare/775de66c45128d999013fa1143398e98dbd071c7...v0.1.0
