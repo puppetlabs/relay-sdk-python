@@ -1,3 +1,4 @@
+include *.md
 include LICENSE.txt
 include mypy.ini
 include tox.ini

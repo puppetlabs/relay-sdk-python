@@ -1,7 +1,12 @@
-import setuptools
 from os import path
 
-with open(path.join(path.abspath(path.dirname(__file__)), 'README.rst'), encoding='utf-8') as fp:
+import setuptools
+
+long_description_file = path.join(
+    path.abspath(path.dirname(__file__)),
+    'README.rst',
+)
+with open(long_description_file, encoding='utf-8') as fp:
     long_description = fp.read()
 
 setuptools.setup(
