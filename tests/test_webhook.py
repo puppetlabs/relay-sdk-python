@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, Iterable, Mapping, Union
 
 import pytest
 from hypercorn.typing import ASGIFramework
-from nebula_sdk.util import SoftTerminationPolicy
-from nebula_sdk.webhook import WebhookServer
 from quart import Quart
+from relay_sdk.util import SoftTerminationPolicy
+from relay_sdk.webhook import WebhookServer
 from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry

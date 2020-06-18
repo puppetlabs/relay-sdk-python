@@ -1,5 +1,5 @@
-from nebula_sdk.client import new_session
-from nebula_sdk.outputs import Outputs
+from relay_sdk.client import new_session
+from relay_sdk.outputs import Outputs
 from requests_mock import Adapter
 
 
