@@ -11,8 +11,6 @@ PYTHON="${PYTHON:-python}"
 # Variables
 #
 
-# XXX: FIXME: Set this properly.
-# ARTIFACTS_BUCKET="${ARTIFACTS_BUCKET:-nebula-packages}"
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-dist}"
 
 #
@@ -21,23 +19,5 @@ ARTIFACTS_DIR="${ARTIFACTS_DIR:-dist}"
 
 . scripts/library.sh
 
-PACKAGE_VERSION="$( $PYTHON setup.py --version )"
-
-for PACKAGE in $( relay::sdk::python::package_artifacts "${ARTIFACTS_DIR}" ); do
-  case "${PACKAGE}" in
-  *.tar.gz)
-    PACKAGE_DIST_NAME="$( relay::sdk::python::package_name )"
-    ;;
-  *.whl)
-    PACKAGE_DIST_NAME="$( relay::sdk::python::package_name_wheel )"
-    ;;
-  *)
-    echo "error: $0: invalid package ${PACKAGE}: not supported" >&2
-    exit 1
-    ;;
-  esac
-
-  PACKAGE_EXT="${PACKAGE##${ARTIFACTS_DIR}/${PACKAGE_DIST_NAME}-${PACKAGE_VERSION}}"
-  relay::sdk::python::release "${ARTIFACTS_BUCKET}" "${PACKAGE}" "${PACKAGE_DIST_NAME}-" "${PACKAGE_EXT}"
-  relay::sdk::python::release "${ARTIFACTS_BUCKET}" "${PACKAGE}.sha256" "${PACKAGE_DIST_NAME}-" "${PACKAGE_EXT}.sha256"
-done
+relay::sdk::python::release_check
+$PYTHON -m twine upload $( relay::sdk::python::package_artifacts "${ARTIFACTS_DIR}" )
