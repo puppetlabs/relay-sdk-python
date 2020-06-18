@@ -1,0 +1,27 @@
+language: python
+python:
+- '3.8'
+before_install:
+- python -m pip install wheel tox
+jobs:
+  include:
+  - stage: build
+    install: []
+    script:
+    - set -e
+    - scripts/ci scripts/test
+  - stage: release
+    env:
+    - TWINE_NON_INTERACTIVE=true
+    - TWINE_USERNAME=__token__
+    - secure: qfdgblSzlSJ0f/7146uQ4w4n1+Tzh2A7OHwOmjfzHKtPV6wKnKQYdYMLwVP96jf0YgapGtB0lRMLRt9yhSeK99ROyQE+xUKm1qy2MQ+YMQquKoqgUbmengxpiibEDnkg4HcRjhh6u6C+N3wSHENE/TM16sogsXFSnvzZclQiEso3qEYuixc5V0mF9VJYiMJjFTFZScHJ3czD+SGQN4ULS+heUyrZxkO+USXq631qi8zXu1lHpfxpwTYN2p4OCSjJeYFOjr4BScdvyEdsq08h00/TxaitpxYGtl2+HG7iWkqbfF88IbVppHpZv6Yqm1mejTMQl8F8Axqrf2Wv/+A3UAeDJ+VBnXEwYCKhaCRAgIMGQxKEcl+UwkjqRLMZtWMEEPuakzJnajniJRKzCsCZkrmtSNjLJVisNZ3Ft/Eit6+kIwdu+E6o+6Owrx5F/+SDBSKNXG7TfbMZV7qF+Hu13fdQoOcoYparV6VxAWEsu7ha1FoatYP7SQisdKelW58p5Ow0DQB2eQOYZGm7ccieEFuXxYNnnXAVv+eeR3CxXFoOEQawMD8av8KzATi7hlZwdAg82svkGr4yv1u3unQe9hf3xRMFc5e4sPzickRNON0Bs6u8fSLSMRj9mAFQmfUfhs7Ascn7sGfalKZ7eOtff3o8OhDbGpnPELhYOV6Qoi0=
+    install:
+    - python -m pip install twine
+    script:
+    - set -e
+    - scripts/ci scripts/dist
+    - scripts/ci scripts/release
+stages:
+- build
+- name: release
+  if: tag =~ ^v

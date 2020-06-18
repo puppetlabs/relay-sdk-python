@@ -16,11 +16,11 @@ will interact with.
 Installation
 ------------
 
-The SDK is available to install via pip:
+The SDK is available to install via `pip`:
 
 .. code-block:: console
 
-  pip --no-cache-dir install "https://packages.nebula.puppet.net/sdk/support/python/v1/nebula_sdk-1-py3-none-any.whl"
+  pip install relay-sdk
 
 If you use the `relaysh/core:latest-python <https://hub.docker.com/r/relaysh/core/tags>`_ container image as your base
 image, it'll be pre-installed.
@@ -35,7 +35,7 @@ generate logs.
 Accessing Data from the step spec
 ---------------------------------
 
-The `Interface class <./reference.html#module-nebula_sdk.interface>`_ is the primary way to interact with the service.
+The `Interface class <./reference.html#module-relay_sdk.interface>`_ is the primary way to interact with the service.
 Import it and instantiate an object, then call methods on that object to access metadata,
 which comes from the ``spec`` section of the step and global Connection information.
 The ``Dynamic`` class provides syntactic sugar for getting data like connection credentials, 
@@ -44,7 +44,7 @@ method accessors.
 
 .. code-block:: python
 
-  from nebula_sdk import Interface, Dynamic as D
+  from relay_sdk import Interface, Dynamic as D
 
   relay = Interface()
   azuresecret = relay.get(D.azure.connection.secret) # using Dynamic
@@ -55,7 +55,7 @@ method accessors.
 Webhook Triggers
 ----------------
 
-The `WebhookServer class <./reference.html#module-nebula_sdk.webhook>`_ provides a
+The `WebhookServer class <./reference.html#module-relay_sdk.webhook>`_ provides a
 helper that sets up a webserver to handle incoming requests for Trigger actions. 
 
 This example, from the `Docker Hub integration <https://github.com/relay-integrations/relay-dockerhub/>`_, makes use of
@@ -72,7 +72,7 @@ integrations the Relay team develops internally use the Quart_ web app framework
 
 .. code-block:: python
 
-  from nebula_sdk import Interface, WebhookServer
+  from relay_sdk import Interface, WebhookServer
   from quart import Quart, request, jsonify, make_response
 
   relay = Interface()

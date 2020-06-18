@@ -13,3 +13,4 @@ PYTHON="${PYTHON:-python}"
 
 $PYTHON -m tox
 $PYTHON -m tox -e check
+$PYTHON -m tox -e docs

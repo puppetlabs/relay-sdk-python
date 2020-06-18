@@ -1,5 +1,5 @@
 import pytest
-from nebula_sdk.interface import Dynamic, Interface, UnresolvableException
+from relay_sdk.interface import Dynamic, Interface, UnresolvableException
 from requests_mock import Adapter
 
 

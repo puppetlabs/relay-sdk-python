@@ -9,7 +9,7 @@ These are auto-generated docs for the current version of the Python SDK
 Client
 ------
 
-.. automodule:: nebula_sdk.client
+.. automodule:: relay_sdk.client
    :members:
 
 ----
@@ -17,7 +17,7 @@ Client
 Events
 ------
 
-.. automodule:: nebula_sdk.events
+.. automodule:: relay_sdk.events
    :members:
 
 ----
@@ -25,7 +25,7 @@ Events
 Interface
 ---------
 
-.. automodule:: nebula_sdk.interface
+.. automodule:: relay_sdk.interface
    :members:
 
 ----
@@ -33,7 +33,7 @@ Interface
 Outputs
 -------
 
-.. automodule:: nebula_sdk.outputs
+.. automodule:: relay_sdk.outputs
    :members:
 
 ----
@@ -41,5 +41,5 @@ Outputs
 Webhook
 -------
 
-.. automodule:: nebula_sdk.webhook
+.. automodule:: relay_sdk.webhook
    :members:
