@@ -1,4 +1,8 @@
 import setuptools
+from os import path
+
+with open(path.join(path.abspath(path.dirname(__file__)), 'README.rst'), encoding='utf-8') as fp:
+    long_description = fp.read()
 
 setuptools.setup(
     name='relay-sdk',
@@ -8,6 +12,8 @@ setuptools.setup(
     author='Puppet, Inc.',
     author_email='relay@puppet.com',
     description='SDK for interacting with Puppet Relay',
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
     url='https://github.com/puppetlabs/relay-sdk-python',
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
