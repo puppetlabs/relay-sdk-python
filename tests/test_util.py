@@ -5,6 +5,7 @@ import signal
 from typing import Any
 
 import pytest
+
 from relay_sdk.util import (JSONEncoder, SignalTerminationPolicy,
                             is_async_callable, json_object_hook)
 

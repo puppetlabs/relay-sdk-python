@@ -1,6 +1,7 @@
+from requests_mock import Adapter
+
 from relay_sdk.client import new_session
 from relay_sdk.outputs import Outputs
-from requests_mock import Adapter
 
 
 class TestOutputs:
