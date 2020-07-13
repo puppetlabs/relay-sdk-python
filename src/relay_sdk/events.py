@@ -1,6 +1,6 @@
 "Generating events for the service to act on"
 import json
-from typing import Any, Mapping
+from typing import Any, Dict, Mapping, Optional
 
 from requests import Session
 
@@ -13,7 +13,7 @@ class Events:
     def __init__(self, client: Session) -> None:
         self._client = client
 
-    def emit(self, data: Mapping[str, Any], key: Any = None) -> None:
+    def emit(self, data: Mapping[str, Any], key: Optional[str] = None) -> None:
         """Sends an event to the service.
 
         Use this from a Trigger handler to start the workflow
@@ -25,14 +25,13 @@ class Events:
         A key can be optionally provided to uniquely identify
         the event."""
 
-        if key is not None:
-            data = {'data': data, 'key': key}
-        else:
-            data = {'data': data}
+        post_data: Dict[str, Any] = {'data': data}
+        if key:
+            post_data['key'] = key
 
         r = self._client.post(
             'http+api://api/events',
-            data=json.dumps(data, cls=JSONEncoder),
+            data=json.dumps(post_data, cls=JSONEncoder),
             headers={'content-type': 'application/json'},
         )
 

@@ -24,4 +24,5 @@ class TestEvents:
             additional_matcher=lambda request:
                 request.json() == {'data': {'foo': 'bar'}, 'key': 'key'},
         )
-        Events(new_session(api_url='http://api')).emit({'foo': 'bar'}, "key")
+        Events(new_session(api_url='http://api')
+               ).emit({'foo': 'bar'}, key='key')
