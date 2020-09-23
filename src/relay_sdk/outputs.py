@@ -1,11 +1,14 @@
 "Outputs allow a step to write data that will be available for later steps"
 import json
+import logging
 from typing import Any
 from urllib.parse import quote
 
 from requests import Session
 
 from .util import JSONEncoder
+
+logger = logging.getLogger(__name__)
 
 
 class Outputs:
@@ -28,3 +31,5 @@ class Outputs:
             headers={'content-type': 'application/json'},
         )
         r.raise_for_status()
+
+        logger.info('Set output %s', repr(name))
