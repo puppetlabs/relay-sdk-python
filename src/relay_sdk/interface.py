@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import logging
+import os
 from typing import Any, Optional, Union
 
 from .client import new_session
@@ -44,8 +46,18 @@ class Dynamic(metaclass=DynamicMetaclass):
 class Interface:
     """An Interface object connects client code to the metadata service."""
 
-    def __init__(self, api_url: Optional[str] = None):
+    def __init__(self, api_url: Optional[str] = None,
+                 configure_logging: Optional[bool] = None):
         self._client = new_session(api_url=api_url)
+
+        if configure_logging is None:
+            configure_logging = os.environ.get('RELAY') == 'true'
+
+        if configure_logging:
+            logging.basicConfig(
+                format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                level=logging.INFO,
+            )
 
     def get(self, q: Optional[Union[Dynamic, str]] = None) -> Any:
         """Retrieve values from the metadata service
