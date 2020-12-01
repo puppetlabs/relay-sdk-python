@@ -33,6 +33,7 @@ class MetadataAPIAdapter(HTTPAdapter):
             ),
             {},
         )
+        request.prepare_auth(None, self._base_url)
 
         return super(MetadataAPIAdapter, self).send(
             request,
