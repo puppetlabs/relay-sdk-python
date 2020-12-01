@@ -1,6 +1,7 @@
 include *.md
 include LICENSE.txt
 include mypy.ini
+include pyproject.toml
 include tox.ini
 recursive-include docs *.py *.rst *.txt
 recursive-include tests *.py
