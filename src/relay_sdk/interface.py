@@ -6,6 +6,8 @@ import logging
 import os
 from typing import Any, Optional, Union
 
+import requests
+
 from .client import new_session
 from .events import Events
 from .outputs import Outputs
@@ -69,6 +71,10 @@ class Interface:
             The value of the queried parameter as a string.
             If no query was provided, all available parameters will be
             returned in a json map
+
+        Raises:
+            requests.exceptions.HTTPError with status_code 422 if the requested
+            parameter is missing.
         """
 
         params = {}
@@ -83,6 +89,31 @@ class Interface:
             raise UnresolvableException()
 
         return data['value']
+
+    def get_or_default(self,
+            q: Optional[Union[Dynamic, str]],
+            default: Optional[Any] = None,
+            ) -> Any:
+        """Retrieve optional values from the metadata service, or supplies a
+        default when absent.
+
+        Args:
+            q: A particular parameter to query the value of.
+            default: A default value to return when the parameter is absent
+            from the spec
+
+        Returns:
+            The value of the queried parameter as a string, or the supplied
+            default value. If no query was provided, all available parameters
+            will be returned in a json map
+        """
+
+        try:
+            return self.get(q)
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 422:
+                return default
+            raise
 
     @property
     def events(self) -> Events:
