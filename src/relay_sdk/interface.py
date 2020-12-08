@@ -14,6 +14,10 @@ from .outputs import Outputs
 from .util import json_object_hook
 
 
+class RequiredParameterMissingException(Exception):
+    pass
+
+
 class UnresolvableException(Exception):
     pass
 
@@ -64,17 +68,8 @@ class Interface:
     def get(self, q: Optional[Union[Dynamic, str]] = None) -> Any:
         """Retrieve values from the metadata service
 
-        Args:
-            q: A particular parameter to query the value of.
-
-        Returns:
-            The value of the queried parameter as a string.
-            If no query was provided, all available parameters will be
-            returned in a json map
-
-        Raises:
-            requests.exceptions.HTTPError with status_code 422 if the requested
-            parameter is missing.
+        This method is deprecated. Please use either get_required or
+        get_or_default as needed.
         """
 
         params = {}
@@ -90,7 +85,31 @@ class Interface:
 
         return data['value']
 
-    def get_or_default(self,
+    def get_required(self, q: Optional[Union[Dynamic, str]] = None) -> Any:
+        """Retrieve values from the metadata service
+
+        Args:
+            q: A particular parameter to query the value of.
+
+        Returns:
+            The value of the queried parameter as a string.
+            If no query was provided, all available parameters will be
+            returned in a json map
+
+        Raises:
+            RequiredParameterMissingException if the requested parameter is
+            missing.
+        """
+
+        try:
+            return self.get(q)
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 422:
+                raise RequiredParameterMissingException()
+            raise
+
+    def get_or_default(
+            self,
             q: Optional[Union[Dynamic, str]],
             default: Optional[Any] = None,
             ) -> Any:
