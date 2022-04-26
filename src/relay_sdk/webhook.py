@@ -43,7 +43,7 @@ class WebhookServer:
                  termination_policy: Optional[TerminationPolicy] = None,
                  port: Optional[int] = None):
         if not is_async_callable(app):
-            app = WsgiToAsgi(app)
+            app = WsgiToAsgi(app)  # type: ignore[no-untyped-call]
 
         if termination_policy is None:
             termination_policy = DEFAULT_TERMINATION_POLICY

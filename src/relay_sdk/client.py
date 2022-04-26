@@ -1,6 +1,6 @@
 """Internal class for clients to interact with the metadata service"""
 import os
-from typing import Mapping, Optional, Union
+from typing import Any, Mapping, Optional, Union
 from urllib.parse import urljoin, urlsplit, urlunsplit
 
 from requests import PreparedRequest, Response, Session
@@ -19,13 +19,15 @@ class MetadataAPIAdapter(HTTPAdapter):
 
         super(MetadataAPIAdapter, self).__init__()
 
+    def add_headers(self, request: PreparedRequest, **kwargs: Any) -> None:
+        request.headers['Connection'] = 'close'
+
     def send(self, request: PreparedRequest, stream: bool = False,
              timeout: Optional[HTTPTimeout] = None,
              verify: Union[bool, str] = True,
              cert: Optional[HTTPClientCertificate] = None,
              proxies: Optional[Mapping[str, str]] = None) -> Response:
         (_, _, path, query, fragment) = urlsplit(request.url or '')
-        """Sends a prepared http request to the metadata API server"""
         request.prepare_url(
             urljoin(
                 self._base_url,
