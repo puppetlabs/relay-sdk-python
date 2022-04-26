@@ -8,3 +8,4 @@ MANIFEST
 /.tox/
 /build/
 /dist/
+venv

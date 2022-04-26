@@ -9,6 +9,7 @@ from typing import Any, Optional, Union
 from .client import new_session
 from .events import Events
 from .outputs import Outputs
+from .workflows import Workflows
 from .util import json_object_hook
 
 
@@ -93,3 +94,8 @@ class Interface:
     def outputs(self) -> Outputs:
         """Accessor for Outputs methods"""
         return Outputs(self._client)
+
+    @property
+    def workflows(self) -> Workflows:
+        """Accessor for Workflows methods"""
+        return Workflows(self._client)
