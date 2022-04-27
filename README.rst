@@ -65,7 +65,7 @@ Use the following to run the workflow ``my_workflow`` with parameter ``param_nam
   from relay_sdk import Interface
 
   relay = Interface()
-  relay.workflows.run('my_workflow', {'param_name':'param_value'})
+  relay.workflows.run('my_workflow', parameters={'param_name':'param_value'})
 
 Webhook Triggers
 ----------------

@@ -2,6 +2,7 @@
 import json
 import logging
 from typing import Any
+from collections.abc import Mapping
 from urllib.parse import quote
 
 from requests import Session
@@ -17,12 +18,12 @@ class Workflows:
     def __init__(self, client: Session) -> None:
         self._client = client
 
-    def run(self, name: str, parameters: Any = {}) -> None:
+    def run(self, name: str, parameters: Mapping[str, Any] = {}) -> None:
         """run starts a workflow with name and parameters
 
         Args:
             name: a string containing the name of the workflow
-            parameters: an object that can serialize to JSON.
+            parameters: an object that can serialize to JSON
         """
         # transform parameters {key:value} dict into {'key': {'value':value}} format
         params = {'parameters': {k: {'value': v}
