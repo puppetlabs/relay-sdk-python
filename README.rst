@@ -52,6 +52,21 @@ method accessors.
   secret = relay.get(D.mysecret)
   relay.outputs.set("outputkey","This will be the value of outputkey")
 
+Running Workflows
+-----------------
+
+The `Workflow class <./reference.html#module-relay_sdk.workflows>`_ offers the method ``run``
+to run a workflow.
+
+Use the following to run the workflow ``my_workflow`` with parameter ``param_name`` and value ``param_value``:
+
+.. code-block:: python
+
+  from relay_sdk import Interface
+
+  relay = Interface()
+  relay.workflows.run('my_workflow', parameters={'param_name':'param_value'})
+
 Webhook Triggers
 ----------------
 

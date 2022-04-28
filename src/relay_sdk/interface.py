@@ -10,6 +10,7 @@ from .client import new_session
 from .events import Events
 from .outputs import Outputs
 from .util import json_object_hook
+from .workflows import Workflows
 
 
 class UnresolvableException(Exception):
@@ -93,3 +94,8 @@ class Interface:
     def outputs(self) -> Outputs:
         """Accessor for Outputs methods"""
         return Outputs(self._client)
+
+    @property
+    def workflows(self) -> Workflows:
+        """Accessor for Workflows methods"""
+        return Workflows(self._client)

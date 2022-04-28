@@ -39,6 +39,14 @@ Outputs
 
 ----
 
+Workflows
+---------
+
+.. automodule:: relay_sdk.workflows
+   :members:
+
+----
+
 Webhook
 -------
 
