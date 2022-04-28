@@ -11,6 +11,7 @@ Client
 
 .. automodule:: relay_sdk.client
    :members:
+   :exclude-members: MetadataAPIAdapter
 
 ----
 

@@ -1,0 +1,102 @@
+name: CI
+on:
+  push:
+  pull_request:
+  schedule:
+  - cron: '25 12 * * *'
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+    - uses: actions/checkout@v3
+    - name: Install tox
+      run: pip install tox
+    - name: Check
+      run: tox -e check
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.x']
+    steps:
+    - uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - uses: actions/checkout@v3
+    - name: Install tox
+      run: pip install tox
+    - name: Test
+      run: tox -e py
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+    - uses: actions/checkout@v3
+    - name: Install tox
+      run: pip install tox
+    - name: Build documentation
+      run: tox -e docs
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+    - uses: actions/checkout@v3
+    - name: Install build
+      run: pip install build
+    - name: Build
+      run: python -m build --sdist --wheel --outdir dist/ .
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: dist/
+        if-no-files-found: error
+        retention-days: 7
+  release:
+    needs:
+    - check
+    - test
+    - docs
+    - build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get tag version
+      id: get-tag-version
+      uses: actions/github-script@v3
+      with:
+        result-encoding: string
+        script: |
+          return context.ref.replace(/^refs\/tags\/v/, '');
+    - uses: mindsers/changelog-reader-action@v2
+      id: read-changelog
+      with:
+        version: ${{ steps.get-tag-version.outputs.result }}
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build
+        path: dist/
+    - uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: v${{ steps.read-changelog.outputs.version }}
+        body: ${{ steps.read-changelog.outputs.changes }}
+        prerelease: ${{ steps.read-changelog.outputs.status == 'prereleased' }}
+        draft: ${{ steps.read-changelog.outputs.status == 'unreleased' }}
+    - name: Release to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}

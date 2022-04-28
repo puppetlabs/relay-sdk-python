@@ -1,10 +1,12 @@
 import asyncio
 import threading
 from concurrent import futures
-from typing import TYPE_CHECKING, Any, Callable, Dict, Iterable, Mapping, Union
+from typing import TYPE_CHECKING, Any, Iterable, Mapping, Union
 
 import pytest
-from hypercorn.typing import ASGIFramework
+from hypercorn.typing import (ASGIFramework, ASGIReceiveCallable,
+                              ASGISendCallable, HTTPResponseBodyEvent,
+                              HTTPResponseStartEvent, Scope)
 from quart import Quart
 from requests import Session
 from requests.adapters import HTTPAdapter
@@ -58,39 +60,49 @@ class TestWebhookServer:
     async def test_asgi_2(self, event_loop: asyncio.AbstractEventLoop) -> None:
         class Application:
 
-            def __init__(self, scope: Dict[Any, Any]) -> None:
+            def __init__(self, scope: Scope) -> None:
                 if scope['type'] != 'http':
                     raise NotImplementedError()
 
-            async def __call__(self, receive: Callable[..., Any],
-                               send: Callable[..., Any]) -> None:
-                await send({
+            async def __call__(self, receive: ASGIReceiveCallable,
+                               send: ASGISendCallable) -> None:
+                response_start: HTTPResponseStartEvent = {
                     'type': 'http.response.start',
                     'status': 200,
-                })
-                await send({
+                    'headers': [],
+                }
+                await send(response_start)
+
+                response_body: HTTPResponseBodyEvent = {
                     'type': 'http.response.body',
-                    'body': b'{"success": true}'
-                })
+                    'body': b'{"success": true}',
+                    'more_body': False,
+                }
+                await send(response_body)
 
         await self._test_app(event_loop, Application)
 
     @pytest.mark.asyncio
     async def test_asgi_3(self, event_loop: asyncio.AbstractEventLoop) -> None:
-        async def application(scope: Dict[Any, Any],
-                              receive: Callable[..., Any],
-                              send: Callable[..., Any]) -> None:
+        async def application(scope: Scope,
+                              receive: ASGIReceiveCallable,
+                              send: ASGISendCallable) -> None:
             if scope['type'] != 'http':
                 raise NotImplementedError()
 
-            await send({
+            response_start: HTTPResponseStartEvent = {
                 'type': 'http.response.start',
                 'status': 200,
-            })
-            await send({
+                'headers': [],
+            }
+            await send(response_start)
+
+            response_body: HTTPResponseBodyEvent = {
                 'type': 'http.response.body',
-                'body': b'{"success": true}'
-            })
+                'body': b'{"success": true}',
+                'more_body': False,
+            }
+            await send(response_body)
 
         await self._test_app(event_loop, application)
 
@@ -124,14 +136,40 @@ class TestWebhookServer:
 
         # This application waits for a termination event on the main thread
         # before it allows itself to complete the request.
-        def application(environ: Mapping[str, Any],
-                        start_response: 'StartResponse') -> Iterable[bytes]:
-            start_response('200 OK', [])
+        async def application(scope: Scope,
+                              receive: ASGIReceiveCallable,
+                              send: ASGISendCallable) -> None:
+            if scope['type'] != 'http':
+                raise NotImplementedError()
+
+            response_start: HTTPResponseStartEvent = {
+                'type': 'http.response.start',
+                'status': 200,
+                'headers': [],
+            }
+            await send(response_start)
+
+            # Force headers to be sent (per spec, at least one body message
+            # must be received by the server).
+            response_body: HTTPResponseBodyEvent = {
+                'type': 'http.response.body',
+                'body': b'',
+                'more_body': True,
+            }
+            await send(response_body)
 
             req_ev.set()
-            term_ev.wait()
+            await asyncio.get_running_loop().run_in_executor(
+                thread_pool_executor,
+                term_ev.wait,
+            )
 
-            yield b'OK'
+            response_body = {
+                'type': 'http.response.body',
+                'body': b'OK',
+                'more_body': False,
+            }
+            await send(response_body)
 
         term = SoftTerminationPolicy()
 
