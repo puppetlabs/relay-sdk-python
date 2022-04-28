@@ -28,7 +28,7 @@ setuptools.setup(
     ],
     install_requires=[
         'asgiref>=3.2.7',
-        'hypercorn>=0.11.2',
+        'hypercorn>=0.13.2',
         'requests>=2.23',
     ],
     classifiers=[

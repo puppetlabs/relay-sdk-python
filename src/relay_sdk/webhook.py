@@ -68,20 +68,15 @@ class WebhookServer:
         return self._sockets.insecure_sockets[0].getsockname()[1]
 
     def listening(self) -> bool:
-        return self._task is not None and not self._task.done()
+        return self._sockets.insecure_sockets[0].fileno() != -1
 
     async def serve(self) -> None:
-        if self._task is None:
-            loop = asyncio.get_running_loop()
-            shutdown_trigger = await self._termination_policy.attach()
-
-            self._task = loop.create_task(worker_serve(
-                self._app, self._config,
-                sockets=self._sockets,
-                shutdown_trigger=shutdown_trigger,
-            ))
-
-        await self._task
+        shutdown_trigger = await self._termination_policy.attach()
+        await worker_serve(
+            self._app, self._config,
+            sockets=self._sockets,
+            shutdown_trigger=shutdown_trigger,
+        )
 
     async def _serve_wait(self) -> None:
         current_task = asyncio.current_task()

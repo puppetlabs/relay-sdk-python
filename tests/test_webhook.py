@@ -136,14 +136,40 @@ class TestWebhookServer:
 
         # This application waits for a termination event on the main thread
         # before it allows itself to complete the request.
-        def application(environ: Mapping[str, Any],
-                        start_response: 'StartResponse') -> Iterable[bytes]:
-            start_response('200 OK', [])
+        async def application(scope: Scope,
+                              receive: ASGIReceiveCallable,
+                              send: ASGISendCallable) -> None:
+            if scope['type'] != 'http':
+                raise NotImplementedError()
+
+            response_start: HTTPResponseStartEvent = {
+                'type': 'http.response.start',
+                'status': 200,
+                'headers': [],
+            }
+            await send(response_start)
+
+            # Force headers to be sent (per spec, at least one body message
+            # must be received by the server).
+            response_body: HTTPResponseBodyEvent = {
+                'type': 'http.response.body',
+                'body': b'',
+                'more_body': True,
+            }
+            await send(response_body)
 
             req_ev.set()
-            term_ev.wait()
+            await asyncio.get_running_loop().run_in_executor(
+                thread_pool_executor,
+                term_ev.wait,
+            )
 
-            yield b'OK'
+            response_body = {
+                'type': 'http.response.body',
+                'body': b'OK',
+                'more_body': False,
+            }
+            await send(response_body)
 
         term = SoftTerminationPolicy()
 
