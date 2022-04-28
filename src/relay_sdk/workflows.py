@@ -2,9 +2,8 @@
 import json
 import logging
 from typing import Any
-from collections.abc import Mapping
+from typing import Mapping
 from urllib.parse import quote
-
 from requests import Session
 
 from .util import JSONEncoder
@@ -25,7 +24,7 @@ class Workflows:
             name: a string containing the name of the workflow
             parameters: an object that can serialize to JSON
         """
-        # transform parameters {key:value} dict into {'key': {'value':value}} format
+        # transform {key:value} dict into {'key': {'value':value}} format
         params = {'parameters': {k: {'value': v}
                                  for k, v in parameters.items()}}
         r = self._client.post(

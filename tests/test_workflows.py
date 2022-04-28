@@ -11,8 +11,8 @@ class TestWorkflows:
             'POST', 'http+api://api/workflows/myworkflow/run',
             text='OK',
             request_headers={'content-type': 'application/json'},
-            additional_matcher=lambda request: 
-                request.json() == {"parameters":{"foo":{"value":"bar"}}},
+            additional_matcher=lambda request:
+                request.json() == {"parameters": {"foo": {"value": "bar"}}},
         )
         Workflows(new_session(api_url='http://api')
                   ).run('myworkflow', {'foo': 'bar'})

@@ -9,8 +9,8 @@ from typing import Any, Optional, Union
 from .client import new_session
 from .events import Events
 from .outputs import Outputs
-from .workflows import Workflows
 from .util import json_object_hook
+from .workflows import Workflows
 
 
 class UnresolvableException(Exception):
