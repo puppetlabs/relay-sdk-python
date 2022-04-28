@@ -1,9 +1,9 @@
 "Allows a step to run a workflow"
 import json
 import logging
-from typing import Any
-from typing import Mapping
+from typing import Any, Mapping
 from urllib.parse import quote
+
 from requests import Session
 
 from .util import JSONEncoder
