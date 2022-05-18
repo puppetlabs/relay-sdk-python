@@ -7,6 +7,7 @@ import os
 from typing import Any, Optional, Union
 
 from .client import new_session
+from .decorators import Decorators
 from .events import Events
 from .outputs import Outputs
 from .util import json_object_hook
@@ -84,6 +85,11 @@ class Interface:
             raise UnresolvableException()
 
         return data['value']
+
+    @property
+    def decorators(self) -> Decorators:
+        """Manipulate UI decorators for this action."""
+        return Decorators(self._client)
 
     @property
     def events(self) -> Events:
