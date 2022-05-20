@@ -17,7 +17,7 @@ class Workflows:
     def __init__(self, client: Session) -> None:
         self._client = client
 
-    def run(self, name: str, parameters: Mapping[str, Any] = {}) -> None:
+    def run(self, name: str, parameters: Mapping[str, Any] = {}) -> Mapping[str, Any]: # noqa E501
         """run starts a workflow with name and parameters
 
         Args:
@@ -35,3 +35,5 @@ class Workflows:
         r.raise_for_status()
 
         logger.info('Run workflow %s', repr(name))
+
+        return r.json()
