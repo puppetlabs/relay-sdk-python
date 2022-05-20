@@ -1,4 +1,3 @@
-import json
 from requests_mock import Adapter
 
 from relay_sdk.client import new_session
