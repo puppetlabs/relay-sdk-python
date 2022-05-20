@@ -1,3 +1,4 @@
+import json
 from requests_mock import Adapter
 
 from relay_sdk.client import new_session
@@ -9,7 +10,7 @@ class TestWorkflows:
     def test_run(self, requests_mock: Adapter) -> None:
         requests_mock.register_uri(
             'POST', 'http+api://api/workflows/myworkflow/run',
-            text='OK',
+            json='OK',
             request_headers={'content-type': 'application/json'},
             additional_matcher=lambda request:
                 request.json() == {"parameters": {"foo": {"value": "bar"}}},
