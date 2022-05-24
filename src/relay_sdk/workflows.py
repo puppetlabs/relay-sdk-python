@@ -1,6 +1,7 @@
 "Allows a step to run a workflow"
 import json
 import logging
+from dataclasses import dataclass
 from typing import Any, Mapping
 from urllib.parse import quote
 
@@ -11,14 +12,23 @@ from .util import JSONEncoder
 logger = logging.getLogger(__name__)
 
 
+@dataclass
+class Run:
+    name: str
+    run_number: int
+    app_url: str
+
+
 class Workflows:
     """Use Workflows to run a workflow with parameters"""
 
     def __init__(self, client: Session) -> None:
         self._client = client
 
-    def run(self, name: str, parameters: Mapping[str, Any] = {}) -> Mapping[str, Any]: # noqa E501
+    def run(self, name: str,
+            parameters: Mapping[str, Any] = {}) -> Run:
         """run starts a workflow with name and parameters
+           and returns the Run object.
 
         Args:
             name: a string containing the name of the workflow
@@ -36,4 +46,4 @@ class Workflows:
 
         logger.info('Run workflow %s', repr(name))
 
-        return r.json()
+        return Run(**r.json()['workflow_run'])

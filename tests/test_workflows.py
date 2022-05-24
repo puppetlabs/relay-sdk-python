@@ -9,7 +9,9 @@ class TestWorkflows:
     def test_run(self, requests_mock: Adapter) -> None:
         requests_mock.register_uri(
             'POST', 'http+api://api/workflows/myworkflow/run',
-            json='OK',
+            json={'workflow_run': {
+                'name': 'name', 'run_number': 13, 'app_url': 'url'}
+                },
             request_headers={'content-type': 'application/json'},
             additional_matcher=lambda request:
                 request.json() == {"parameters": {"foo": {"value": "bar"}}},
