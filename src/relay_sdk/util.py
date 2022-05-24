@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import dataclasses
 import datetime
 import functools
 import inspect
@@ -33,6 +34,8 @@ class JSONEncoder(json.JSONEncoder):
 
     @functools.singledispatchmethod
     def default(self, obj: Any) -> Any:
+        if dataclasses.is_dataclass(obj):
+            return dataclasses.asdict(obj)
         try:
             it = iter(obj)
         except TypeError:
