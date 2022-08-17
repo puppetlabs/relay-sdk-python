@@ -1,18 +1,6 @@
 Relay Python SDK
 ================
 
-This is the Python SDK for use with the internal `Relay <https://relay.sh>`_ service APIs.
-The SDK requires Python 3.8.
-
-It is intended for use by integration authors who are building containers to run 
-inside the service. For running workflows and interacting with the user-facing
-service APIs, use the `Relay CLI <https://github.com/puppetlabs/relay/>`_.
-
-The API documentation is auto-generated from the source code. Here are some
-higher-level examples that show the main SDK classes that integration authors
-will interact with.
-
-
 Installation
 ------------
 
